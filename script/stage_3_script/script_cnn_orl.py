@@ -41,7 +41,7 @@ if 1:
     setting_obj.print_setup_summary()
     mean_score, std_score = setting_obj.load_run_save_evaluate()
     print('************ Overall Performance ************')
-    print('CNN ORL Accuracy: ' + str(mean_score) + ' +/- ' + str(std_score))
+    print('CNN ORL Accuracy: ' + str(mean_score))
     print('************ Finish ************')
     # ------------------------------------------------------
 

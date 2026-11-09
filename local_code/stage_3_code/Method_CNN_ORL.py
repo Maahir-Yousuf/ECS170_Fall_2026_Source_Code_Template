@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 class Method_CNN_ORL(method, nn.Module):
 
     data = None
-    max_epoch = 100
+    max_epoch = 50
     learning_rate = 1e-3
 
     def __init__(self, mName, mDescription):
@@ -20,10 +20,17 @@ class Method_CNN_ORL(method, nn.Module):
         # Setting up Convolutional layers
         # Conv2d (in_channels, out_channels, kernel_size, stride)
         # Batch Normalization will also be included for each layer
-        self.conv1 = nn.Conv2d(1, 16, 5, 1)
+
+        k1,k2 = 5,5
+        # k1,k2 = 41,25
+
+        out1,out2 = 120,84
+        out1,out2 = 516, 212
+
+        self.conv1 = nn.Conv2d(1, 16, k1, 1)
         self.bn1 = nn.BatchNorm2d(16)
 
-        self.conv2 = nn.Conv2d(16, 16, 5, 1)
+        self.conv2 = nn.Conv2d(16, 16, k2, 1)
         self.bn2 = nn.BatchNorm2d(16)
 
         # Activation and Pooling
@@ -38,9 +45,15 @@ class Method_CNN_ORL(method, nn.Module):
 
         # Setting up Linear layers
         # Linear (in_features, out_features)
-        self.fc1 = nn.Linear(16 * 25 * 20, 120) # 112x92 -> 108x88 -> pool(54x44) -> 50x40 -> pool(25x20)
-        self.fc2 = nn.Linear(120, 84)
-        self.fc3 = nn.Linear(84, 40) # Out_features must be 40 to account for all 40 individuals
+
+        #stop the size form being hardcoded to be able to change hyperparameters
+        h,w = 112,92
+        h,w = (h-k1+1)//2, (w-k1+1)//2
+        h, w = (h - k2 + 1) // 2, (w - k2 + 1) // 2
+
+        self.fc1 = nn.Linear(16 * h*w, out1) # 112x92 -> 108x88 -> pool(54x44) -> 50x40 -> pool(25x20)
+        self.fc2 = nn.Linear(out1, out2)
+        self.fc3 = nn.Linear(out2, 40) # Out_features must be 40 to account for all 40 individuals
 
 
         # Forward Propagation

@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 class Method_CNN_MNIST(method, nn.Module):
 
     data = None
-    max_epoch = 20
-    learning_rate = 1e-3
+    max_epoch = 50
+    learning_rate = 0.001
 
     def __init__(self, mName, mDescription):
         method.__init__(self, mName, mDescription)
@@ -19,8 +19,11 @@ class Method_CNN_MNIST(method, nn.Module):
 
         # Setting up Convolutional layers
         # Conv2d (in_channels, out_channels, kernel_size, stride)
-        self.conv1 = nn.Conv2d(1, 16, 5, 1)
-        self.conv2 = nn.Conv2d(16, 16, 5, 1)
+        k1,k2 = 5,5
+        # k1,k2 = 11,9
+
+        self.conv1 = nn.Conv2d(1, 16, k1, 1)
+        self.conv2 = nn.Conv2d(16, 16, k2, 1)
 
         # Activation and Pooling
         self.activation_func_1 = nn.ReLU()
@@ -32,9 +35,13 @@ class Method_CNN_MNIST(method, nn.Module):
 
         # Setting up Linear layers
         # Linear (in_features, out_features)
-        self.fc1 = nn.Linear(16 * 10 * 10, 120) # 28x28 -> 24x24 -> 20x20 -> 10x10
-        self.fc2 = nn.Linear(120, 84)
-        self.fc3 = nn.Linear(84, 10) # Out_features must be 10 to account for all 10 digit classes
+
+        size = ((28 - k1 +1) -k2 +1) //2
+        out1, out2 = 120, 84
+        # out1,out2 = 105, 30
+        self.fc1 = nn.Linear(16 * size*size, out1)
+        self.fc2 = nn.Linear(out1, out2)
+        self.fc3 = nn.Linear(out2, 10) # Out_features must be 10 to account for all 10 digit classes
 
 
         # Forward Propagation
