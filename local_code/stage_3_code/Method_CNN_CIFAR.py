@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 class Method_CNN_CIFAR (method, nn.Module):
 
     data = None
-    max_epoch = 20
+    max_epoch = 40
     learning_rate = 1e-3
 
     def __init__(self, mName, mDescription):
@@ -19,33 +19,40 @@ class Method_CNN_CIFAR (method, nn.Module):
 
         # Setting up Convolutional layers
         # Conv2d (in_channels, out_channels, kernel_size, stride)
-        self.conv1 = nn.Conv2d(3, 16, 5, 1)
-        self.conv2 = nn.Conv2d(16, 16, 5, 1)
+        # Batch Normalization will also be included for each layer
+        self.conv1 = nn.Conv2d(3, 32, 3, 1)
+        self.bn1 = nn.BatchNorm2d(32)
+
+        self.conv2 = nn.Conv2d(32, 64, 3, 1)
+        self.bn2 = nn.BatchNorm2d(64)
+
+        self.conv3 = nn.Conv2d(64, 128, 3, 1)
+        self.bn3 = nn.BatchNorm2d(128)
 
         # Activation and Pooling
-        self.activation_func_1 = nn.ReLU()
-        self.activation_func_2 = nn.ReLU()
+        self.activation_func = nn.ReLU()
         self.pool = nn.MaxPool2d(2) # Kernel_size = 2
+        self.dropout = nn.Dropout(p=0.3)
 
         # Flattening the 2D feature maps
         self.flatten = nn.Flatten()
 
         # Setting up Linear layers
         # Linear (in_features, out_features)
-        self.fc1 = nn.Linear(16 * 5 * 5, 120) # 32x32 -> 28x28 -> 14x14 -> 10x10 -> 5x5
-        self.fc2 = nn.Linear(120, 84)
+        self.fc1 = nn.Linear(128 * 2 * 2, 256)
+        self.fc2 = nn.Linear(256, 84)
         self.fc3 = nn.Linear(84, 10) # 10 different integers
 
 
         # Forward Propagation
     def forward(self, x):
-        x = self.activation_func_1(self.conv1(x))
-        x = self.pool(x)
-        x = self.activation_func_2(self.conv2(x))
-        x = self.pool(x)
+        x = self.pool(self.activation_func(self.bn1(self.conv1(x))))
+        x = self.pool(self.activation_func(self.bn2(self.conv2(x))))
+        x = self.pool(self.activation_func(self.bn3(self.conv3(x))))
         x = self.flatten(x)
-        x = self.activation_func_1(self.fc1(x))
-        x = self.activation_func_2(self.fc2(x))
+        x = self.dropout(x)
+        x = self.activation_func(self.fc1(x))
+        x = self.activation_func(self.fc2(x))
         x = self.fc3(x)
         return x
 

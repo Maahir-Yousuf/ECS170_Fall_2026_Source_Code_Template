@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 class Method_CNN_ORL(method, nn.Module):
 
     data = None
-    max_epoch = 20
+    max_epoch = 100
     learning_rate = 1e-3
 
     def __init__(self, mName, mDescription):
@@ -19,13 +19,19 @@ class Method_CNN_ORL(method, nn.Module):
 
         # Setting up Convolutional layers
         # Conv2d (in_channels, out_channels, kernel_size, stride)
+        # Batch Normalization will also be included for each layer
         self.conv1 = nn.Conv2d(1, 16, 5, 1)
+        self.bn1 = nn.BatchNorm2d(16)
+
         self.conv2 = nn.Conv2d(16, 16, 5, 1)
+        self.bn2 = nn.BatchNorm2d(16)
 
         # Activation and Pooling
-        self.activation_func_1 = nn.ReLU()
-        self.activation_func_2 = nn.ReLU()
+        self.activation_func = nn.ReLU()
         self.pool = nn.MaxPool2d(2) # Kernel_size = 2
+
+        # This dropout layer turns off a percentage of neutrons during training
+        self.dropout = nn.Dropout(p=0.4)
 
         # Flattening the 2D feature maps
         self.flatten = nn.Flatten()
@@ -39,13 +45,12 @@ class Method_CNN_ORL(method, nn.Module):
 
         # Forward Propagation
     def forward(self, x):
-        x = self.activation_func_1(self.conv1(x))
-        x = self.pool(x)
-        x = self.activation_func_2(self.conv2(x))
-        x = self.pool(x)
+        x = self.pool(self.activation_func(self.bn1(self.conv1(x))))
+        x = self.pool(self.activation_func(self.bn2(self.conv2(x))))
         x = self.flatten(x)
-        x = self.activation_func_1(self.fc1(x))
-        x = self.activation_func_2(self.fc2(x))
+        x = self.dropout(x)
+        x = self.activation_func(self.fc1(x))
+        x = self.activation_func(self.fc2(x))
         x = self.fc3(x)
         return x
 
