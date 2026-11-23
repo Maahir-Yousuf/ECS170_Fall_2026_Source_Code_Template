@@ -9,7 +9,7 @@ from local_code.stage_4_code.Dataset_Loader_Generator import  pad_id, unk_id, eo
 class Method_RNN_Generator(method, nn.Module):
 
     data = None
-    epochs = 20
+    epochs = 160
     learning_rate = 1e-3
 
     start_phrases = [
@@ -104,7 +104,7 @@ class Method_RNN_Generator(method, nn.Module):
 
     @torch.no_grad()
 
-    def generate(self, start_ids, word2idx, idx2word, max_len=100, temperature=0.8):
+    def generate(self, start_ids, word2idx, idx2word, max_len=100, temperature=0.5):
 
         device = next(self.parameters()).device
         nn.Module.train(self, False)

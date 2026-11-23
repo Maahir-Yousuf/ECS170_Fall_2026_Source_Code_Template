@@ -20,7 +20,7 @@ def detokenize(tokens):
 
 class Dataset_Loader_Generator(Dataset_Loader):
 
-    def __init__(self, dName=None, dDescription=None, max_len = 64, min_freq= 2):
+    def __init__(self, dName=None, dDescription=None, max_len = 64, min_freq= 1):
         super().__init__(dName, dDescription, max_len)
         self.min_freq = min_freq
 
