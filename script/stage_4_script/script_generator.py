@@ -15,9 +15,10 @@ if 1:
     # ---- parameter section -------------------------------
     np.random.seed(2)
     torch.manual_seed(2)
-    rnn_type = 'RNN' # Can be changed to 'LSTM' and 'GRU'
+    rnn_type = 'GRU' # Can be changed to 'LSTM' and 'GRU'
     # ------------------------------------------------------
-
+        #done with rnn
+        #done with lstm
     # ---- objection initialization section ---------------
     data_obj = Dataset_Loader_Generator('RNN', 'Movie Reviews and Jokes', max_len=64, min_freq=1)
     data_obj.dataset_source_folder_path = '../../data/stage_4_data/text_generation/'
@@ -25,19 +26,19 @@ if 1:
 
     loaded_data = data_obj.load()
     glove_matrix = data_obj.load_glove_embeddings(
-        '../../data/stage_4_data/glove.50d.txt',
-        embedding_dim=50
+        '../../data/stage_4_data/glove.100d.txt',
+        embedding_dim=100
     )
 
     method_obj = Method_RNN_Generator(f'{rnn_type}_Generator', '', vocab_size=len(loaded_data['word2idx']),
-                    embedding_dim=50, hidden_size=256, num_layers=2, dropout=0.3, rnn_type=rnn_type, pretrained_embeddings=glove_matrix)
+                    embedding_dim=100, hidden_size=256, num_layers=2, dropout=0.3, rnn_type=rnn_type, pretrained_embeddings=glove_matrix)
 
-    method_obj.epochs = 160
+    method_obj.epochs = 80
     method_obj.data = loaded_data
 
     result_obj = Result_Saver('saver', '')
     result_obj.result_destination_folder_path = f'../../result/stage_4_result/{rnn_type}_Gen_'
-    result_obj.result_destination_file_name = 'generation_result'
+    result_obj.result_destination_file_name = 'generation_result_temperature_alter'
 
     # ------------------------------------------------------
 

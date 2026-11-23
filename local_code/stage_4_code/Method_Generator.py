@@ -9,8 +9,8 @@ from local_code.stage_4_code.Dataset_Loader_Generator import  pad_id, unk_id, eo
 class Method_RNN_Generator(method, nn.Module):
 
     data = None
-    epochs = 160
-    learning_rate = 1e-3
+    epochs = 80
+    learning_rate = 1e-13
 
     start_phrases = [
         ['what', 'did', 'the'],

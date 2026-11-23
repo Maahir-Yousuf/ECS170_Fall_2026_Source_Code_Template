@@ -20,6 +20,7 @@ if 1:
     rnn_type = 'RNN' # Can be changed to 'LSTM' and 'GRU'
     # ------------------------------------------------------
 
+
     # ---- objection initialization section ---------------
     data_obj = Dataset_Loader('RNN', 'Movie Reviews and Jokes', max_len=256)
     data_obj.dataset_source_folder_path = '../../data/stage_4_data/text_classification'
@@ -35,8 +36,8 @@ if 1:
                             rnn_type=rnn_type, pretrained_embeddings=glove_matrix)
 
     result_obj = Result_Saver('saver', '')
-    result_obj.result_destination_folder_path = '../../result/stage_4_result/{rnn_type}_'
-    result_obj.result_destination_file_name = 'prediction_result'
+    result_obj.result_destination_folder_path = f'../../result/stage_4_result/{rnn_type}_'
+    result_obj.result_destination_file_name = 'learning_rate_alter'
 
     setting_obj = Setting_Train_Test_Split('train test split', '')
 
@@ -49,7 +50,7 @@ if 1:
     setting_obj.print_setup_summary()
     mean_score, std_score = setting_obj.load_run_save_evaluate()
     print('************ Overall Performance ************')
-    print('{rnn_type} Accuracy: ' + str(mean_score) + ' +/- ' + str(std_score))
+    print(f'{rnn_type} Accuracy: ' + str(mean_score) + ' +/- ' + str(std_score))
     print('************ Finish ************')
     # ------------------------------------------------------
 
